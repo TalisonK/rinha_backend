@@ -1,11 +1,24 @@
 package main
 
-import "github.com/labstack/echo"
+import (
+	"net/http"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/talisonk/rinha/configs"
+	"github.com/talisonk/rinha/handlers"
+)
 
 func main() {
 
-	e := echo.New()
+	err := configs.Load()
+	if err != nil {
+		panic(err)
+	}
 
-	e.Logger.Fatal(e.Start(":8081"))
+	r := chi.NewRouter()
+
+	r.Post("/", handlers.Create)
+
+	http.ListenAndServe(configs.GetServerPort(), r)
 
 }
