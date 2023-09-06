@@ -23,8 +23,9 @@ type DBConfig struct {
 
 var cfg *config
 
-func Init() {
-	viper.SetDefault("api.port", "9000")
+func init() {
+	viper.SetDefault("api.port", "3033")
+	viper.SetDefault("api.host", "http://localhost")
 	viper.SetDefault("database.host", "localhost")
 	viper.SetDefault("database.port", "5432")
 }

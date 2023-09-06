@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -18,7 +20,10 @@ func main() {
 	r := chi.NewRouter()
 
 	r.Post("/", handlers.Create)
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello World!"))
+	})
 
-	http.ListenAndServe(configs.GetServerPort(), r)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", configs.GetServerPort()), r))
 
 }
