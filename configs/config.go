@@ -25,9 +25,11 @@ var cfg *config
 
 func init() {
 	viper.SetDefault("api.port", "3033")
-	viper.SetDefault("api.host", "http://localhost")
 	viper.SetDefault("database.host", "localhost")
 	viper.SetDefault("database.port", "5432")
+	viper.SetDefault("database.user", "user_pessoa")
+	viper.SetDefault("database.pass", "1122")
+	viper.SetDefault("database.name", "api_pessoas")
 }
 
 func Load() error {

@@ -5,9 +5,9 @@ import (
 )
 
 type Pessoa struct {
-	id         uuid.UUID  `json: "id"; default:uuid_generate_v4()`
-	apelido    string     `json: "apelido"`
-	nome       string     `json: "nome"`
-	nascimento string     `json: "nascimento"`
-	stack      ([]string) `json: "stack"`
+	Id         uuid.UUID  `json: "id"`
+	Apelido    string     `json: "apelido"`
+	Nome       string     `json: "nome"`
+	Nascimento string     `json: "nascimento"`
+	Stack      ([]string) `json: "stack"`
 }

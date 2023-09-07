@@ -1,6 +1,8 @@
 package models
 
 import (
+	"log"
+
 	"github.com/google/uuid"
 	"github.com/talisonk/rinha/database"
 )
@@ -8,6 +10,8 @@ import (
 func Insert(pessoa Pessoa) (id uuid.UUID, err error) {
 
 	conn, err := database.OpenConnection()
+
+	log.Println("Inserting", pessoa)
 
 	if err != nil {
 		return
@@ -17,7 +21,7 @@ func Insert(pessoa Pessoa) (id uuid.UUID, err error) {
 
 	sql := `INSERT INTO pessoas (apelido, nome, nascimento, stack) VALUES ($1, $2, $3) RETURNING id`
 
-	err = conn.QueryRow(sql, pessoa.apelido, pessoa.nome, pessoa.nascimento, pessoa.stack).Scan(&id)
+	err = conn.QueryRow(sql, pessoa.Apelido, pessoa.Nome, pessoa.Nascimento, pessoa.Stack).Scan(&id)
 
 	return
 }

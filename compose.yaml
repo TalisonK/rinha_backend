@@ -9,13 +9,14 @@ services:
 
   db:
     image: postgres:15
+    container_name: Banco_api_pessoas
     hostname: db
     restart: always
     user: postgres
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_DB: rinha
+      POSTGRES_DB: api_pessoas
     ports:
       - "5432:5432"
     expose:

@@ -1,11 +1,10 @@
-CREATE DATABASE api_pessoas /*!40100 DEFAULT CHARACTER SET utf8 */;
-
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";
 
 \c api_pessoas
 
-CREATE USER user_todo;
-ALTER USER user_todo WITH PASSWORD '1122';
-GRANT ALL PRIVILEGES ON DATABASE api_pessoas TO user_todo;
-Grant ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO user_todo;
+CREATE USER user_pessoa;
+ALTER USER user_pessoa WITH PASSWORD '1122';
+GRANT ALL PRIVILEGES ON DATABASE api_pessoas TO user_pessoa;
+Grant ALL PRIVILEGES ON TABLE pessoas TO user_pessoa;
+Grant ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO user_pessoa;

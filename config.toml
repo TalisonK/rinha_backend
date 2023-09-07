@@ -3,7 +3,7 @@ port = "3033"
 
 [database]
 host = "localhost"
-port= "5432"
+port = "5432"
 user = "user_pessoa"
 pass = "1122"
-name = "api_pessoa"
+name = "api_pessoas"

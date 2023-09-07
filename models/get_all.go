@@ -23,7 +23,7 @@ func GetAll() (pessoas []Pessoa, err error) {
 	for rows.Next() {
 		var pessoa Pessoa
 
-		err = rows.Scan(&pessoa.id, &pessoa.apelido, &pessoa.nascimento, &pessoa.nome, &pessoa.stack)
+		err = rows.Scan(&pessoa.Id, &pessoa.Apelido, &pessoa.Nascimento, &pessoa.Nome, &pessoa.Stack)
 
 		if err != nil {
 			continue

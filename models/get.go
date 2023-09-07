@@ -17,7 +17,7 @@ func Get(id uuid.UUID) (pessoa Pessoa, err error) {
 
 	row := conn.QueryRow(`SELECT * FROM pessoas WHERE id=$1`, id)
 
-	err = row.Scan(&pessoa.id, &pessoa.apelido, &pessoa.nascimento, &pessoa.nome, &pessoa.stack)
+	err = row.Scan(&pessoa.Id, &pessoa.Apelido, &pessoa.Nascimento, &pessoa.Nome, &pessoa.Stack)
 
 	return
 

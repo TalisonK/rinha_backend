@@ -32,7 +32,7 @@ func Create(res http.ResponseWriter, req *http.Request) {
 	} else {
 		resp = map[string]any{
 			"Error":   false,
-			"Message": fmt.Sprintf("Pessoa inserida com sucesso"),
+			"Message": "Pessoa inserida com sucesso",
 		}
 	}
 
