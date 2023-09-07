@@ -22,8 +22,10 @@ func main() {
 	r.Post("/", handlers.Create)
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Hello World!"))
+		log.Println("Get received")
 	})
 
+	log.Println("Server running on port", configs.GetServerPort())
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", configs.GetServerPort()), r))
 
 }

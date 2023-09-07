@@ -1,31 +1,25 @@
-# syntax=docker/dockerfile:1
-
-FROM golang:1.20 aS builder
+#First stage: build the executable.
+FROM golang:1.20 AS builder
 
 WORKDIR /app
 
-# Copy Go module files
-COPY go.* ./
+COPY . /app/
 
 # Download dependencies
 RUN go mod download
 
-# Copy source files
-COPY ./cmd ./cmd
-COPY ./internal ./internal
-COPY ./pkg ./pkg
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /server
 
-# Build
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -o /bin/server .
+#second stage: build the image
 
-FROM alpine:latest AS final
+FROM gcr.io/distroless/base-debian10
 
-EXPOSE 8080
+WORKDIR /
 
-# Copy files from builder stage
-COPY --from=build /bin/server /bin/
-COPY ./config.toml /data/config.toml
+COPY --from=builder /server /server
 
+EXPOSE 3033
 
+USER nonroot:nonroot
 
-ENTRYPOINT [ "/bin/server" ]
+ENTRYPOINT [ "/server" ]
