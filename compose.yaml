@@ -21,7 +21,7 @@ services:
       - ./changelog/00-configuracao.sql:/docker-entrypoint-initdb.d/00-configuracao.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
+      interval: 3s
       timeout: 5s
       retries: 5
 

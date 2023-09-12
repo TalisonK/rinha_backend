@@ -7,7 +7,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/talisonk/rinha/configs"
 	"github.com/talisonk/rinha/database"
-	"github.com/talisonk/rinha/handlers"
 )
 
 func main() {
@@ -30,11 +29,7 @@ func main() {
 
 	app := fiber.New()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
-
-	app.Post("/", handlers.Create)
+	Router(app)
 
 	app.Listen(":3033")
 

@@ -14,4 +14,5 @@ type Pessoa struct {
 	Nome       string         `json:"nome" gorm:"type:text;not null"`
 	Nascimento string         `json:"nascimento" gorm:"type:text;not null"`
 	Stack      pq.StringArray `json:"stack" gorm:"type:text[]"`
+	Junto      string         `json:"concat" gorm:"type:text;not null"`
 }
