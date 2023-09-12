@@ -1,14 +1,6 @@
 services:
-  
-  api:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "3033:3033"
-
   db:
-    image: postgres:15
+    image: postgres:alpine
     container_name: Banco_api_pessoas
     hostname: db
     restart: always
@@ -17,15 +9,43 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
       POSTGRES_DB: api_pessoas
+      POSTGRES_HOST: 0.0.0.0
     ports:
       - "5432:5432"
     expose:
       - "5432"
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+      - ./changelog/00-configuracao.sql:/docker-entrypoint-initdb.d/00-configuracao.sql
     healthcheck:
-      test: [ "CMD", "pg_isready" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
-    volumes:
-      - ./changelog/00-configuracao.sql:/docker-entrypoint-initdb.d/00-configuracao.sql
-      - ./changelog/01-cricao-tabela.sql:/docker-entrypoint-initdb.d/01-cricao-tabela.sql
+
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3033:3033"
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
+    environment:
+      POSTGRES_PASSWORD: 1122
+      POSTGRES_USER: user_pessoa
+      POSTGRES_DB: api_pessoas
+  
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    links:
+      - db
+
+volumes:
+  postgres-db:

@@ -1,31 +1,41 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"net/http"
+	"os"
 
-	"github.com/go-chi/chi/v5"
+	"github.com/gofiber/fiber/v2"
 	"github.com/talisonk/rinha/configs"
+	"github.com/talisonk/rinha/database"
 	"github.com/talisonk/rinha/handlers"
 )
 
 func main() {
 
 	err := configs.Load()
+
 	if err != nil {
-		panic(err)
+		log.Fatal("Erro ao carregar as configurações")
+		os.Exit(2)
 	}
 
-	r := chi.NewRouter()
+	err = database.OpenConnection()
 
-	r.Post("/", handlers.GetAll)
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello World!"))
-		log.Println("Get received")
+	if err != nil {
+		log.Fatal("Erro ao conectar ao banco de dados")
+		os.Exit(2)
+	}
+
+	defer database.CloseConnection()
+
+	app := fiber.New()
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Hello, World!")
 	})
 
-	log.Println("Server running on port", configs.GetServerPort())
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", configs.GetServerPort()), r))
+	app.Post("/", handlers.Create)
+
+	app.Listen(":3033")
 
 }

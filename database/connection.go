@@ -1,28 +1,54 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
+	"log"
 
 	"github.com/talisonk/rinha/configs"
-
-	_ "github.com/lib/pq"
+	"github.com/talisonk/rinha/models"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
-func OpenConnection() (*sql.DB, error) {
+type Dbinstance struct {
+	Db *gorm.DB
+}
+
+var DB Dbinstance
+
+func OpenConnection() error {
 
 	conf := configs.GetDB()
 
-	sc := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", conf.Host, conf.Port, conf.User, conf.Pass, conf.Database)
+	dsn := fmt.Sprintf("host=db user=%s password=%s dbname=%s port=%s sslmode=disable", conf.User, conf.Pass, conf.Database, conf.Port)
 
-	conn, err := sql.Open("postgres", sc)
+	conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 
 	if err != nil {
-		panic(err)
+		log.Fatalln("Failed to connect to database.", err)
+		return err
 	}
 
-	err = conn.Ping()
+	log.Println("Connected to database!")
+	conn.Logger = logger.Default.LogMode(logger.Info)
 
-	return conn, err
+	conn.AutoMigrate(&models.Pessoa{})
 
+	DB = Dbinstance{
+		Db: conn,
+	}
+
+	return nil
+
+}
+
+func CloseConnection() {
+	db, err := DB.Db.DB()
+	if err != nil {
+		log.Fatalln("Failed to close database.", err)
+	}
+	db.Close()
 }

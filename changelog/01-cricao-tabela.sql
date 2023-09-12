@@ -7,6 +7,9 @@ CREATE TABLE pessoas(
     stack varchar(255)[] NOT NULL
 );
 
+Grant ALL PRIVILEGES ON TABLE pessoas TO user_pessoa;
+Grant ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO user_pessoa;
+
 INSERT INTO pessoas (nome, apelido, nascimento, stack) VALUES ('João', 'Joãozinho', '1990-01-01', '{Java, Python}');
 Insert INTO pessoas (nome, apelido, nascimento, stack) VALUES ('Maria', 'Mariazinha', '1990-01-01', '{Java, Python}');
 Insert INTO pessoas (nome, apelido, nascimento, stack) VALUES ('José', 'Zézinho', '1990-01-01', '{Java, Python}');
