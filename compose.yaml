@@ -1,5 +1,7 @@
+version: '3.7'
+
 services:
-  db:
+  db: # banco de dados
     image: postgres:alpine
     container_name: Banco_api_pessoas
     hostname: db
@@ -23,7 +25,8 @@ services:
       timeout: 5s
       retries: 5
 
-  api:
+  api1: # instancia 1
+    hostname: api1
     build: 
       context: .
       dockerfile: Dockerfile
@@ -34,12 +37,33 @@ services:
         condition: service_healthy
     links:
       - db
-    environment:
-      POSTGRES_PASSWORD: 1122
-      POSTGRES_USER: user_pessoa
-      POSTGRES_DB: api_pessoas
   
-  adminer:
+  api2: # instancia 2
+    hostname: api2
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3034:3033"
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
+  
+  nginx: # balanceador de carga
+    image: nginx:alpine
+    container_name: nginx
+    restart: always
+    ports:
+      - "9999:9999"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - api1
+      - api2
+  
+  adminer: # interface para o banco de dados
     image: adminer
     restart: always
     ports:
@@ -47,5 +71,5 @@ services:
     links:
       - db
 
-volumes:
+volumes: # volume para persistir os dados do banco de dados
   postgres-db:

@@ -20,7 +20,7 @@ var DB Dbinstance
 func OpenConnection() error {
 
 	conf := configs.GetDB()
-
+	//para conectar no banco de dados via docker-compose usar o host=db, caso contrário usar conf.Host
 	dsn := fmt.Sprintf("host=db user=%s password=%s dbname=%s port=%s sslmode=disable", conf.User, conf.Pass, conf.Database, conf.Port)
 
 	conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
