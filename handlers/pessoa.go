@@ -17,25 +17,18 @@ func Create(c *fiber.Ctx) error {
 
 	if err := c.BodyParser(pessoa); err != nil {
 		log.Printf("Erro ao fazer a inserção: %v", err)
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"Error":   true,
-			"Message": fmt.Sprintf("Ocorreu um erro ao tentar inserir %v", err),
-		})
+		return c.Status(http.StatusBadRequest).JSON(nil)
 	}
 
-	stackConcat := ""
+	ret := database.DB.Db.Create(&pessoa).Select("id")
 
-	for _, stack := range pessoa.Stack {
-		stackConcat += stack + " "
+	if ret.Error != nil {
+		return c.Status(http.StatusUnprocessableEntity).JSON(nil)
 	}
 
-	pessoa.Junto = fmt.Sprintf("%s %s %s", pessoa.Apelido, pessoa.Nome, stackConcat)
+	c.Set("Location", fmt.Sprintf("/pessoas/%v", pessoa.Id))
 
-	ret := database.DB.Db.Create(&pessoa)
-
-	log.Println(ret)
-
-	return c.Status(http.StatusCreated).JSON(pessoa)
+	return c.SendStatus(http.StatusCreated)
 
 }
 
