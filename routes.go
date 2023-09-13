@@ -15,7 +15,7 @@ func Router(app *fiber.App) {
 
 	app.Get("/pessoas/:id", handlers.GetPessoa)
 
-	app.Get("/pessoas?t", handlers.FiltroPessoas)
+	app.Get("/pessoas", handlers.FiltroPessoas)
 
 	app.Get("/contagem-pessoas", handlers.ContagemPessoas)
 

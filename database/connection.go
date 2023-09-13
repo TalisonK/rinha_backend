@@ -22,10 +22,10 @@ func OpenConnection() error {
 	conf := configs.GetDB()
 
 	//Configuração para conectar no banco de dados local
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", conf.Host, conf.User, conf.Pass, conf.Database, conf.Port)
+	//dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", conf.Host, conf.User, conf.Pass, conf.Database, conf.Port)
 
 	//Configuração para conectar no banco de dados via docker-compose
-	//dsn := fmt.Sprintf("host=db user=%s password=%s dbname=%s port=%s sslmode=disable", conf.User, conf.Pass, conf.Database, conf.Port)
+	dsn := fmt.Sprintf("host=db user=%s password=%s dbname=%s port=%s sslmode=disable", conf.User, conf.Pass, conf.Database, conf.Port)
 
 	conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),

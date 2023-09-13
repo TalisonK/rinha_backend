@@ -37,10 +37,7 @@ func GetPessoa(c *fiber.Ctx) error {
 	uuid, err := uuid.Parse(c.Params("id"))
 
 	if err != nil {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-			"Error":   true,
-			"Message": fmt.Sprintf("Ocorreu um erro ao tentar converter o id %v", err),
-		})
+		return c.Status(http.StatusBadRequest).JSON(nil)
 	}
 
 	pessoa := new(models.Pessoa)
@@ -65,13 +62,14 @@ func FiltroPessoas(c *fiber.Ctx) error {
 
 	pessoas := new([]models.Pessoa)
 
-	ret := database.DB.Db.Where("nome LIKE ?", fmt.Sprintf("%%%s%%", query)).Find(&pessoas)
+	ret := database.DB.Db.Where("nome LIKE ?", "%"+query+"%").
+		Or("apelido LIKE ?", "%"+query+"%").
+		Or("stack @> ARRAY[?]", query).
+		Limit(50).
+		Find(&pessoas)
 
 	if ret.Error != nil {
-		return c.Status(http.StatusNotFound).JSON(fiber.Map{
-			"Error":   true,
-			"Message": fmt.Sprintf("Pessoa não encontrada %v", ret.Error),
-		})
+		return c.Status(http.StatusBadRequest).JSON(nil)
 	}
 
 	return c.Status(http.StatusOK).JSON(pessoas)
@@ -91,7 +89,5 @@ func ContagemPessoas(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(http.StatusOK).JSON(fiber.Map{
-		"Count": count,
-	})
+	return c.Status(http.StatusOK).JSON(count)
 }
