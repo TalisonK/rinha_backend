@@ -24,6 +24,11 @@ services:
       interval: 3s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: '1.5GB'
 
   api1: # instancia 1
     hostname: api1
@@ -37,6 +42,11 @@ services:
         condition: service_healthy
     links:
       - db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: '0.5GB'
   
   api2: # instancia 2
     hostname: api2
@@ -50,6 +60,11 @@ services:
         condition: service_healthy
     links:
       - db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: '0.5GB'
   
   nginx: # balanceador de carga
     image: nginx:alpine
@@ -62,14 +77,19 @@ services:
     depends_on:
       - api1
       - api2
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: '0.5GB'
   
-  adminer: # interface para o banco de dados
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-    links:
-      - db
+  # adminer: # interface para o banco de dados
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
+  #   links:
+  #     - db
 
 volumes: # volume para persistir os dados do banco de dados
   postgres-db:
